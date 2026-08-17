@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: DevOps SRE Team
+  author: SRE Team
   description: oMLX Native macOS LLM Inference Server Provisioning Role
   company: Enterprise SRE
   license: MIT

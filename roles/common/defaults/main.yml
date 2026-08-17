@@ -1,5 +1,8 @@
 ---
 # Default variables for common role
+mac_automation_user: "{{ lookup('env', 'USER') | default('admin') }}"
+mac_user_home: "/Users/{{ mac_automation_user }}"
+
 common_homebrew_packages:
   - git
   - curl
@@ -15,9 +18,9 @@ common_homebrew_casks: []
 
 common_base_directories:
   - "/usr/local/bin"
-  - "/Users/{{ devops_automation_user | default('devops') }}/.config"
-  - "/Users/{{ devops_automation_user | default('devops') }}/bin"
-  - "/Users/{{ devops_automation_user | default('devops') }}/var/log"
+  - "{{ mac_user_home }}/.config"
+  - "{{ mac_user_home }}/bin"
+  - "{{ mac_user_home }}/var/log"
 
 homebrew_prefix_arm64: "/opt/homebrew"
 homebrew_prefix_x86_64: "/usr/local"

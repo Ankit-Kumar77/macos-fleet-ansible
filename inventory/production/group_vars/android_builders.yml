@@ -1,6 +1,7 @@
 ---
-# Android Builder Group Overrides
+# Android Builder Group Variables
 android_jdk_formula: "openjdk@17"
+android_sdk_root: "{{ mac_user_home | default('/Users/' + (mac_automation_user | default('admin'))) }}/Library/Android/sdk"
 android_sdk_packages:
   - "platform-tools"
   - "platforms;android-34"

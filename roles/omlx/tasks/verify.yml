@@ -7,7 +7,7 @@
 
 - name: Verify LaunchAgent Service Plist File Exists
   ansible.builtin.stat:
-    path: "/Users/{{ devops_automation_user }}/Library/LaunchAgents/com.jundot.omlx.plist"
+    path: "/Users/{{ mac_automation_user }}/Library/LaunchAgents/com.jundot.omlx.plist"
   register: verify_omlx_plist
 
 - name: Display oMLX Installation Summary

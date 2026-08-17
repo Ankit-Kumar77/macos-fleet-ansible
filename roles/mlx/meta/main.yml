@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: DevOps SRE Team
+  author: SRE Team
   description: Apple Silicon MLX Framework Provisioning Role
   company: Enterprise SRE
   license: MIT

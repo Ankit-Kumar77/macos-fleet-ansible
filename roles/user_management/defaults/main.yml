@@ -1,7 +1,5 @@
 ---
-devops_automation_user: "devops"
-devops_user_shell: "/bin/zsh"
-devops_user_groups:
-  - admin
-  - _developer
-devops_ssh_key_type: "ed25519"
+mac_automation_user: "{{ lookup('env', 'USER') | default('admin') }}"
+mac_developer_group: "_developer"
+mac_admin_group: "admin"
+mac_additional_users: []

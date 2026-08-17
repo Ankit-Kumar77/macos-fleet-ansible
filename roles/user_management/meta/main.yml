@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: DevOps SRE Team
+  author: SRE Team
   description: macOS User Management Role using Directory Service (dscl / sysadminctl)
   company: Enterprise SRE
   license: MIT

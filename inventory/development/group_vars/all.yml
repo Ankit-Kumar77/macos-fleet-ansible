@@ -1,4 +1,4 @@
 ---
 # Development Environment Overrides
-devops_automation_user: "devops"
+mac_automation_user: "{{ lookup('env', 'USER') | default('admin') }}"
 security_enable_firewall: false

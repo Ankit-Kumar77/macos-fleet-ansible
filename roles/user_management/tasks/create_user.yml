@@ -1,0 +1,16 @@
+---
+# Helper task to dynamically create user accounts from mac_additional_users variable list
+- name: Check if user {{ user_item.username }} exists
+  ansible.builtin.command: "dscl . -read /Users/{{ user_item.username }}"
+  register: user_item_check
+  failed_when: false
+  changed_when: false
+
+- name: Create additional user account {{ user_item.username }}
+  ansible.builtin.command: >
+    sysadminctl -addUser {{ user_item.username }}
+    -fullName "{{ user_item.full_name | default(user_item.username) }}"
+    -shell {{ user_item.shell | default('/bin/zsh') }}
+    {{ (user_item.admin | default(false)) | ternary('-admin', '') }}
+  become: true
+  when: user_item_check.rc != 0

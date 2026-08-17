@@ -1,17 +1,17 @@
 ---
 - name: Verify user exists in Directory Service
-  ansible.builtin.command: "dscl . -read /Users/{{ devops_automation_user }} RecordName"
+  ansible.builtin.command: "dscl . -read /Users/{{ mac_automation_user }} RecordName"
   register: verify_user
   changed_when: false
   failed_when: verify_user.rc != 0
 
 - name: Verify shell configuration
-  ansible.builtin.command: "dscl . -read /Users/{{ devops_automation_user }} UserShell"
+  ansible.builtin.command: "dscl . -read /Users/{{ mac_automation_user }} UserShell"
   register: verify_shell
   changed_when: false
 
 - name: Display User Verification Results
   ansible.builtin.debug:
     msg:
-      - "User Account: {{ verify_user.stdout }}"
+      - "Target User Account: {{ verify_user.stdout }}"
       - "User Shell: {{ verify_shell.stdout }}"

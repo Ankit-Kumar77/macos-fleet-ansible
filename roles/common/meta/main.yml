@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: DevOps SRE Team
+  author: SRE Team
   description: Common macOS base role for Apple Mac Mini fleet
   company: Enterprise SRE
   license: MIT

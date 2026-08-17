@@ -12,7 +12,7 @@
 
 - name: Ensure Homebrew environment is configured in shell profile
   ansible.builtin.lineinfile:
-    path: "/Users/{{ ansible_user }}/.zprofile"
+    path: "{{ mac_user_home }}/.zprofile"
     line: 'eval "$({{ homebrew_bin_path }}/brew shellenv)"'
     create: true
     mode: '0644'

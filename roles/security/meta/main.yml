@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: DevOps SRE Team
+  author: SRE Team
   description: macOS Security Baseline and Hardening Role
   company: Enterprise SRE
   license: MIT

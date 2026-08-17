@@ -1,39 +1,46 @@
 ---
-- name: Ensure automation user exists (macOS native user checking via dscl)
-  ansible.builtin.command: "dscl . -read /Users/{{ devops_automation_user }}"
-  register: user_check
+- name: Ensure target primary automation user exists (macOS native dscl)
+  ansible.builtin.command: "dscl . -read /Users/{{ mac_automation_user }}"
+  register: primary_user_check
   failed_when: false
   changed_when: false
 
-- name: Create automation user account on macOS (requires sudo privilege)
+- name: Create primary automation user account on macOS (requires sudo)
   ansible.builtin.command: >
-    sysadminctl -addUser {{ devops_automation_user }}
-    -fullName "DevOps Automation Account"
-    -shell {{ devops_user_shell }}
+    sysadminctl -addUser {{ mac_automation_user }}
+    -fullName "Automation Service Account"
+    -shell /bin/zsh
     -admin
   become: true
-  when: user_check.rc != 0
+  when: primary_user_check.rc != 0
 
-- name: Add automation user to developer group for macOS Xcode build access
-  ansible.builtin.command: "dseditgroup -o edit -a {{ devops_automation_user }} -t user _developer"
+- name: Add primary automation user to developer group for Xcode build access
+  ansible.builtin.command: "dseditgroup -o edit -a {{ mac_automation_user }} -t user {{ mac_developer_group }}"
   become: true
   changed_when: false
 
-- name: Ensure SSH configuration directory exists for user
+- name: Dynamically manage additional user accounts (if defined in variables)
+  ansible.builtin.include_tasks: create_user.yml
+  loop: "{{ mac_additional_users }}"
+  loop_control:
+    loop_var: user_item
+  when: mac_additional_users is defined and mac_additional_users | length > 0
+
+- name: Ensure SSH directory exists for primary user
   ansible.builtin.file:
-    path: "/Users/{{ devops_automation_user }}/.ssh"
+    path: "/Users/{{ mac_automation_user }}/.ssh"
     state: directory
-    owner: "{{ devops_automation_user }}"
+    owner: "{{ mac_automation_user }}"
     mode: '0700'
 
-- name: Ensure custom .zshrc environment script is configured
+- name: Ensure environment configuration (.zshrc) is configured
   ansible.builtin.blockinfile:
-    path: "/Users/{{ devops_automation_user }}/.zshrc"
+    path: "/Users/{{ mac_automation_user }}/.zshrc"
     create: true
-    owner: "{{ devops_automation_user }}"
+    owner: "{{ mac_automation_user }}"
     mode: '0644'
     block: |
-      # DevOps Automation Environment Variables
+      # Universal macOS Automation Environment
       export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
       export LANG="en_US.UTF-8"
       export LC_ALL="en_US.UTF-8"

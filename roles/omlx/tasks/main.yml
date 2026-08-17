@@ -36,15 +36,15 @@
 
 - name: Ensure LaunchAgents Directory Exists
   ansible.builtin.file:
-    path: "/Users/{{ devops_automation_user }}/Library/LaunchAgents"
+    path: "/Users/{{ mac_automation_user }}/Library/LaunchAgents"
     state: directory
-    owner: "{{ devops_automation_user }}"
+    owner: "{{ mac_automation_user }}"
     mode: '0755'
 
 - name: Configure LaunchAgent Plist for oMLX Background Service
   ansible.builtin.copy:
-    dest: "/Users/{{ devops_automation_user }}/Library/LaunchAgents/com.jundot.omlx.plist"
-    owner: "{{ devops_automation_user }}"
+    dest: "/Users/{{ mac_automation_user }}/Library/LaunchAgents/com.jundot.omlx.plist"
+    owner: "{{ mac_automation_user }}"
     mode: '0644'
     content: |
       <?xml version="1.0" encoding="UTF-8"?>
@@ -65,9 +65,9 @@
           <key>KeepAlive</key>
           <true/>
           <key>StandardOutPath</key>
-          <string>/Users/{{ devops_automation_user }}/var/log/omlx.log</string>
+          <string>/Users/{{ mac_automation_user }}/var/log/omlx.log</string>
           <key>StandardErrorPath</key>
-          <string>/Users/{{ devops_automation_user }}/var/log/omlx.err</string>
+          <string>/Users/{{ mac_automation_user }}/var/log/omlx.err</string>
       </dict>
   when: omlx_enable_launchagent
 

@@ -1,6 +1,6 @@
 ---
 # ==============================================================================
-# Bootstrap Playbook - Bare Mac Preparation
+# Bootstrap Playbook - Bare macOS Preparation
 # ==============================================================================
 - name: Bootstrap Bare macOS System
   hosts: all

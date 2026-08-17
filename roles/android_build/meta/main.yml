@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: DevOps SRE Team
+  author: SRE Team
   description: macOS Android Build Infrastructure Role
   company: Enterprise SRE
   license: MIT

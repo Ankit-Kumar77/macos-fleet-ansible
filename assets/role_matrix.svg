@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" height="100%" style="background-color: #0b0f19; font-family: system-ui, -apple-system, sans-serif;">
+  <text x="400" y="35" text-anchor="middle" fill="#f8fafc" font-size="20" font-weight="700">Role-to-Group Assignment Matrix</text>
+
+  <rect x="40" y="65" width="720" height="40" fill="#1e293b" rx="6" />
+  <text x="140" y="90" fill="#94a3b8" font-size="14" font-weight="700">Role Name</text>
+  <text x="310" y="90" fill="#38bdf8" font-size="14" font-weight="700">ios_builders</text>
+  <text x="480" y="90" fill="#a7f3d0" font-size="14" font-weight="700">android_builders</text>
+  <text x="650" y="90" fill="#c084fc" font-size="14" font-weight="700">llm_nodes</text>
+
+  <rect x="40" y="115" width="720" height="35" fill="#0f172a" rx="4" />
+  <text x="60" y="138" fill="#f1f5f9" font-size="13" font-weight="600">common</text>
+  <text x="320" y="138" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="490" y="138" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="660" y="138" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+
+  <rect x="40" y="155" width="720" height="35" fill="#1e293b" rx="4" />
+  <text x="60" y="178" fill="#f1f5f9" font-size="13" font-weight="600">user_management</text>
+  <text x="320" y="178" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="490" y="178" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="660" y="178" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+
+  <rect x="40" y="195" width="720" height="35" fill="#0f172a" rx="4" />
+  <text x="60" y="218" fill="#f1f5f9" font-size="13" font-weight="600">security</text>
+  <text x="320" y="218" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="490" y="218" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="660" y="218" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+
+  <rect x="40" y="235" width="720" height="35" fill="#1e293b" rx="4" />
+  <text x="60" y="258" fill="#f1f5f9" font-size="13" font-weight="600">ios_build</text>
+  <text x="320" y="258" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="490" y="258" fill="#64748b" font-size="14">—</text>
+  <text x="660" y="258" fill="#64748b" font-size="14">—</text>
+
+  <rect x="40" y="275" width="720" height="35" fill="#0f172a" rx="4" />
+  <text x="60" y="298" fill="#f1f5f9" font-size="13" font-weight="600">android_build</text>
+  <text x="320" y="298" fill="#64748b" font-size="14">—</text>
+  <text x="490" y="298" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+  <text x="660" y="298" fill="#64748b" font-size="14">—</text>
+
+  <rect x="40" y="315" width="720" height="35" fill="#1e293b" rx="4" />
+  <text x="60" y="338" fill="#f1f5f9" font-size="13" font-weight="600">mlx &amp; omlx</text>
+  <text x="320" y="338" fill="#64748b" font-size="14">—</text>
+  <text x="490" y="338" fill="#64748b" font-size="14">—</text>
+  <text x="660" y="338" fill="#22c55e" font-size="16" font-weight="700">✓</text>
+</svg>

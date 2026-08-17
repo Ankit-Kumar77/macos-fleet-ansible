@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="100%" height="100%" style="background-color: #0f172a; font-family: system-ui, -apple-system, sans-serif;">
+  <defs>
+    <linearGradient id="grad-control" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="grad-group" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#6d28d9" />
+    </linearGradient>
+    <linearGradient id="grad-role" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="grad-mac" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <text x="450" y="40" text-anchor="middle" fill="#f8fafc" font-size="22" font-weight="700">macOS Infrastructure Automation Architecture</text>
+  <text x="450" y="65" text-anchor="middle" fill="#94a3b8" font-size="14">Role-Based Enterprise Infrastructure Automation Framework</text>
+
+  <rect x="50" y="100" width="800" height="70" rx="10" fill="url(#grad-control)" filter="url(#shadow)" />
+  <text x="70" y="130" fill="#ffffff" font-size="16" font-weight="700">Ansible Control Node</text>
+  <text x="70" y="152" fill="#dbeafe" font-size="13">ansible.cfg  |  requirements.yml  |  ansible-playbook CLI</text>
+
+  <line x1="450" y1="170" x2="450" y2="210" stroke="#64748b" stroke-width="3" stroke-dasharray="6,6" />
+  <polygon points="450,215 444,205 456,205" fill="#64748b" />
+
+  <rect x="50" y="220" width="380" height="90" rx="10" fill="url(#grad-group)" filter="url(#shadow)" />
+  <text x="70" y="250" fill="#ffffff" font-size="16" font-weight="700">Inventory &amp; Group Vars</text>
+  <text x="70" y="272" fill="#ed4e14" font-size="12">inventory/production/hosts.yml</text>
+  <text x="70" y="292" fill="#ddd6fe" font-size="12">Group Overrides (all, ios, android, llm)</text>
+
+  <rect x="470" y="220" width="380" height="90" rx="10" fill="url(#grad-role)" filter="url(#shadow)" />
+  <text x="490" y="250" fill="#ffffff" font-size="16" font-weight="700">Master Playbook &amp; Roles</text>
+  <text x="490" y="272" fill="#a7f3d0" font-size="12">site.yml Orchestrator</text>
+  <text x="490" y="292" fill="#d1fae5" font-size="12">common, user_mgmt, security, ios, android, mlx, omlx</text>
+
+  <line x1="240" y1="310" x2="240" y2="350" stroke="#64748b" stroke-width="3" />
+  <polygon points="240,355 234,345 246,345" fill="#64748b" />
+
+  <line x1="660" y1="310" x2="660" y2="350" stroke="#64748b" stroke-width="3" />
+  <polygon points="660,355 654,345 666,345" fill="#64748b" />
+
+  <rect x="50" y="360" width="240" height="100" rx="10" fill="url(#grad-mac)" filter="url(#shadow)" />
+  <text x="70" y="390" fill="#ffffff" font-size="15" font-weight="700">iOS Build Nodes</text>
+  <text x="70" y="412" fill="#fef3c7" font-size="12">Xcode CLT, CocoaPods</text>
+  <text x="70" y="432" fill="#fef3c7" font-size="12">Fastlane, Swift Tools</text>
+
+  <rect x="330" y="360" width="240" height="100" rx="10" fill="url(#grad-mac)" filter="url(#shadow)" />
+  <text x="350" y="390" fill="#ffffff" font-size="15" font-weight="700">Android Build Nodes</text>
+  <text x="350" y="412" fill="#fef3c7" font-size="12">OpenJDK 17, Gradle</text>
+  <text x="350" y="432" fill="#fef3c7" font-size="12">Android SDK, ADB</text>
+
+  <rect x="610" y="360" width="240" height="100" rx="10" fill="url(#grad-mac)" filter="url(#shadow)" />
+  <text x="630" y="390" fill="#ffffff" font-size="15" font-weight="700">Local LLM Nodes</text>
+  <text x="630" y="412" fill="#fef3c7" font-size="12">Apple Silicon MLX Framework</text>
+  <text x="630" y="432" fill="#fef3c7" font-size="12">oMLX Server + LaunchAgent</text>
+</svg>

@@ -6,10 +6,9 @@
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
 
-- name: Install Android Command Line Tools & Gradle via Homebrew Cask / Formula
+- name: Install Gradle via Homebrew
   community.general.homebrew:
-    name:
-      - gradle
+    name: gradle
     state: present
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
@@ -25,14 +24,14 @@
   ansible.builtin.file:
     path: "{{ android_sdk_root }}"
     state: directory
-    owner: "{{ devops_automation_user }}"
+    owner: "{{ mac_automation_user }}"
     mode: '0755'
 
 - name: Configure ANDROID_HOME and JAVA_HOME in user environment (.zprofile)
   ansible.builtin.blockinfile:
-    path: "/Users/{{ devops_automation_user }}/.zprofile"
+    path: "/Users/{{ mac_automation_user }}/.zprofile"
     create: true
-    owner: "{{ devops_automation_user }}"
+    owner: "{{ mac_automation_user }}"
     mode: '0644'
     block: |
       export JAVA_HOME="{{ homebrew_prefix }}/opt/{{ android_jdk_formula }}"

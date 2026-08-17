@@ -1,5 +1,5 @@
 ---
-mlx_venv_path: "/Users/{{ devops_automation_user | default('devops') }}/.venv/mlx"
+mlx_venv_path: "{{ mac_user_home | default('/Users/' + (mac_automation_user | default('admin'))) }}/.venv/mlx"
 mlx_version: "0.22.0"
 mlx_lm_version: "0.21.1"
 mlx_python_packages:

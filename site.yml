@@ -1,6 +1,6 @@
 ---
 # ==============================================================================
-# Master Site Provisioning Playbook for Apple Mac Minis
+# Master Site Provisioning Playbook for macOS Fleet
 # ==============================================================================
 # Orchestrates roles across target machines based on inventory group assignment.
 

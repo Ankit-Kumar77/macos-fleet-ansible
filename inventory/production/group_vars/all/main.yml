@@ -1,12 +1,23 @@
 ---
-# ==========================================
-# Global Defaults for All macOS Mac Minis
-# ==========================================
+# ==============================================================================
+# Universal Global Variables & Default Settings
+# ==============================================================================
 
-# User Management
-devops_automation_user: "devops"
-devops_user_shell: "/bin/zsh"
-devops_admin_group: "admin"
+# User Management (Configurable for any organization or setup)
+mac_automation_user: "{{ lookup('env', 'USER') | default('admin') }}"
+mac_admin_group: "admin"
+mac_developer_group: "_developer"
+
+# Dynamic User Creation List (Easily scale/add more users in the future)
+mac_additional_users: []
+
+# Base Directory Structure (Dynamic based on target user home)
+mac_user_home: "/Users/{{ mac_automation_user }}"
+common_base_directories:
+  - "/usr/local/bin"
+  - "{{ mac_user_home }}/.config"
+  - "{{ mac_user_home }}/bin"
+  - "{{ mac_user_home }}/var/log"
 
 # Base Packages (Common Role)
 common_homebrew_packages:
@@ -20,15 +31,13 @@ common_homebrew_packages:
   - ninja
   - python@3.11
 
-common_homebrew_casks:
-  - iterm2
-  - visual-studio-code
+common_homebrew_casks: []
 
-# Homebrew Installation Path Defaults
+# Homebrew Paths
 homebrew_prefix_arm64: "/opt/homebrew"
 homebrew_prefix_x86_64: "/usr/local"
 
-# Base Security Toggles
+# Security Toggles
 security_set_hostname: true
 security_enable_firewall: true
 security_enable_stealth_mode: true

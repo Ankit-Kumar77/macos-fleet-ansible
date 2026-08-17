@@ -1,0 +1,44 @@
+---
+# ==============================================================================
+# Master Site Provisioning Playbook for Apple Mac Minis
+# ==============================================================================
+# Orchestrates roles across target machines based on inventory group assignment.
+
+- name: Apply Baseline Configuration (Common & User Management)
+  hosts: common_nodes
+  gather_facts: true
+  roles:
+    - role: common
+      tags: ["common", "base"]
+    - role: user_management
+      tags: ["user_management", "user", "base"]
+
+- name: Apply Security Baseline Configuration
+  hosts: secure_nodes
+  gather_facts: true
+  roles:
+    - role: security
+      tags: ["security", "sec"]
+
+- name: Provision iOS Build Environment
+  hosts: ios_builders
+  gather_facts: true
+  roles:
+    - role: ios_build
+      tags: ["ios_build", "ios", "build"]
+
+- name: Provision Android Build Environment
+  hosts: android_builders
+  gather_facts: true
+  roles:
+    - role: android_build
+      tags: ["android_build", "android", "build"]
+
+- name: Provision Apple Silicon MLX Runtime
+  hosts: llm_nodes
+  gather_facts: true
+  roles:
+    - role: mlx
+      tags: ["mlx", "llm", "ai"]
+    - role: omlx
+      tags: ["omlx", "llm", "ai"]

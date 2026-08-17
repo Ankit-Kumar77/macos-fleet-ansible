@@ -1,0 +1,24 @@
+---
+- name: Verify Developer Directory Selection (xcode-select)
+  ansible.builtin.command: "xcode-select -p"
+  register: verify_xcode_path
+  changed_when: false
+
+- name: Verify CocoaPods Version
+  ansible.builtin.command: "{{ homebrew_bin_path }}/pod --version"
+  register: verify_pod
+  changed_when: false
+  failed_when: false
+
+- name: Verify Fastlane Version
+  ansible.builtin.command: "{{ homebrew_bin_path }}/fastlane --version"
+  register: verify_fastlane
+  changed_when: false
+  failed_when: false
+
+- name: Display iOS Tooling Verification Summary
+  ansible.builtin.debug:
+    msg:
+      - "Developer Path: {{ verify_xcode_path.stdout }}"
+      - "CocoaPods Version: {{ verify_pod.stdout | default('Not installed') }}"
+      - "Fastlane Version: {{ verify_fastlane.stdout_lines[0] | default('Not installed') }}"

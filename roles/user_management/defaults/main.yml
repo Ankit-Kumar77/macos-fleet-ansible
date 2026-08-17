@@ -1,0 +1,7 @@
+---
+devops_automation_user: "devops"
+devops_user_shell: "/bin/zsh"
+devops_user_groups:
+  - admin
+  - _developer
+devops_ssh_key_type: "ed25519"

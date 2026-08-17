@@ -1,0 +1,23 @@
+---
+- name: Verify HostName configuration
+  ansible.builtin.command: "scutil --get HostName"
+  register: verify_hostname
+  changed_when: false
+  failed_when: false
+
+- name: Verify Application Firewall status
+  ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate"
+  register: verify_firewall
+  changed_when: false
+
+- name: Verify Gatekeeper status
+  ansible.builtin.command: "spctl --status"
+  register: verify_gatekeeper
+  changed_when: false
+
+- name: Display Security Audit Summary
+  ansible.builtin.debug:
+    msg:
+      - "Configured HostName: {{ verify_hostname.stdout | default('Not explicitly set') }}"
+      - "Firewall Status: {{ verify_firewall.stdout }}"
+      - "Gatekeeper Status: {{ verify_gatekeeper.stdout }}"

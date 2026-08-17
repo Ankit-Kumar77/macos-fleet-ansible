@@ -1,0 +1,12 @@
+---
+# ==============================================================================
+# Local LLM Runtime Provisioning Playbook (MLX & OMLX)
+# ==============================================================================
+- name: Provision MLX and OMLX Inference Workloads
+  hosts: llm_nodes
+  gather_facts: true
+  roles:
+    - role: mlx
+      tags: ["mlx", "llm"]
+    - role: omlx
+      tags: ["omlx", "llm"]

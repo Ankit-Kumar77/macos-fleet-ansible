@@ -1,0 +1,30 @@
+---
+- name: Assert Architecture is Apple Silicon (arm64) for MLX
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['architecture'] == 'arm64'
+    fail_msg: "MLX framework requires Apple Silicon architecture (arm64). Current architecture is {{ ansible_facts['architecture'] }}."
+    success_msg: "Apple Silicon architecture verified for MLX."
+
+- name: Create Virtual Environment for MLX Framework
+  ansible.builtin.command: "{{ homebrew_bin_path }}/python3 -m venv {{ mlx_venv_path }}"
+  args:
+    creates: "{{ mlx_venv_path }}/bin/activate"
+
+- name: Ensure pip, setuptools, and wheel are up-to-date in MLX venv
+  ansible.builtin.pip:
+    name:
+      - pip
+      - setuptools
+      - wheel
+    state: latest
+    executable: "{{ mlx_venv_path }}/bin/pip"
+
+- name: Install MLX and MLX-LM Python Packages inside Virtual Environment
+  ansible.builtin.pip:
+    name: "{{ item.name }}=={{ item.version }}"
+    executable: "{{ mlx_venv_path }}/bin/pip"
+  loop: "{{ mlx_python_packages }}"
+
+- name: Include MLX Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

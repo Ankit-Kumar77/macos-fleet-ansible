@@ -1,0 +1,28 @@
+---
+- name: Ensure target OS is macOS (Darwin)
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['os_family'] == 'Darwin'
+    fail_msg: "This Ansible playbook is specifically designed for macOS target nodes."
+    success_msg: "Target OS verified as macOS (Darwin)."
+
+- name: Set Homebrew Binary Path based on Architecture
+  ansible.builtin.set_fact:
+    homebrew_bin_path: "{{ (ansible_facts['architecture'] == 'arm64') | ternary('/opt/homebrew/bin', '/usr/local/bin') }}"
+    homebrew_prefix: "{{ (ansible_facts['architecture'] == 'arm64') | ternary('/opt/homebrew', '/usr/local') }}"
+
+- name: Create Base Project and Log Directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ common_base_directories }}"
+
+- name: Include Homebrew Setup Tasks
+  ansible.builtin.include_tasks: homebrew.yml
+
+- name: Include Packages Installation Tasks
+  ansible.builtin.include_tasks: packages.yml
+
+- name: Include Common Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

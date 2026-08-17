@@ -1,0 +1,8 @@
+---
+# PLACEHOLDER — Encrypt this file with `ansible-vault encrypt inventory/production/group_vars/all/vault.yml`
+# DO NOT commit unencrypted secrets to version control.
+
+vault_admin_password_hash: "$6$rounds=656400$saltstring$PLACEHOLDER_ENCRYPTED_PASSWORD_HASH"
+vault_github_api_token: "ghp_PLACEHOLDER_SECRET_GITHUB_API_TOKEN_123456"
+vault_huggingface_token: "hf_PLACEHOLDER_SECRET_HUGGINGFACE_TOKEN_987654"
+vault_apple_developer_api_key: "PLACEHOLDER_APPLE_DEV_KEY"

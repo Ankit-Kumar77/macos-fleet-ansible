@@ -1,0 +1,17 @@
+---
+- name: Check oMLX Executable Version
+  ansible.builtin.command: "{{ homebrew_bin_path }}/omlx --version"
+  register: verify_omlx_version
+  changed_when: false
+  failed_when: false
+
+- name: Verify LaunchAgent Service Plist File Exists
+  ansible.builtin.stat:
+    path: "/Users/{{ devops_automation_user }}/Library/LaunchAgents/com.jundot.omlx.plist"
+  register: verify_omlx_plist
+
+- name: Display oMLX Installation Summary
+  ansible.builtin.debug:
+    msg:
+      - "oMLX Version Output: {{ verify_omlx_version.stdout | default('Binary not found directly in path') }}"
+      - "LaunchAgent Plist Configured: {{ verify_omlx_plist.stat.exists }}"

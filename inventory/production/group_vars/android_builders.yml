@@ -1,0 +1,8 @@
+---
+# Android Builder Group Overrides
+android_jdk_formula: "openjdk@17"
+android_sdk_packages:
+  - "platform-tools"
+  - "platforms;android-34"
+  - "build-tools;34.0.0"
+android_gradle_version: "8.5"

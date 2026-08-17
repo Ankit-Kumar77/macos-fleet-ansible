@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: DevOps SRE Team
+  description: Common macOS base role for Apple Mac Mini fleet
+  company: Enterprise SRE
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: MacOSX
+      versions:
+        - all
+dependencies: []

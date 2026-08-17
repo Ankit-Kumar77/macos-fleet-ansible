@@ -1,0 +1,40 @@
+---
+# ==========================================
+# Global Defaults for All macOS Mac Minis
+# ==========================================
+
+# User Management
+devops_automation_user: "devops"
+devops_user_shell: "/bin/zsh"
+devops_admin_group: "admin"
+
+# Base Packages (Common Role)
+common_homebrew_packages:
+  - git
+  - curl
+  - wget
+  - jq
+  - htop
+  - tree
+  - cmake
+  - ninja
+  - python@3.11
+
+common_homebrew_casks:
+  - iterm2
+  - visual-studio-code
+
+# Homebrew Installation Path Defaults
+homebrew_prefix_arm64: "/opt/homebrew"
+homebrew_prefix_x86_64: "/usr/local"
+
+# Base Security Toggles
+security_set_hostname: true
+security_enable_firewall: true
+security_enable_stealth_mode: true
+security_sshd_disable_root: true
+security_sshd_disable_password_auth: true
+security_enable_autoupdate: true
+security_configure_pmset: true
+security_sleep_display_minutes: 15
+security_sleep_disk_minutes: 30

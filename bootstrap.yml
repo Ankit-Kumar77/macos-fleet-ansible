@@ -1,0 +1,12 @@
+---
+# ==============================================================================
+# Bootstrap Playbook - Bare Mac Preparation
+# ==============================================================================
+- name: Bootstrap Bare macOS System
+  hosts: all
+  gather_facts: true
+  roles:
+    - role: common
+      tags: ["common", "bootstrap"]
+    - role: user_management
+      tags: ["user_management", "bootstrap"]

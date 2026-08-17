@@ -1,0 +1,30 @@
+---
+- name: Verify Command Line Tools or Xcode installation
+  ansible.builtin.command: "xcode-select -p"
+  register: xcode_select_check
+  failed_when: false
+  changed_when: false
+
+- name: Trigger Command Line Tools Installation Prompt if absent
+  ansible.builtin.command: "xcode-select --install"
+  when: xcode_select_check.rc != 0
+  changed_when: true
+
+- name: Accept Xcode License Non-interactively (if Xcode app bundle present)
+  ansible.builtin.command: "xcodebuild -license accept"
+  become: true
+  when:
+    - ios_xcode_clt_auto_accept_license
+    - xcode_select_check.rc == 0
+  failed_when: false
+  changed_when: false
+
+- name: Install iOS Development Tools via Homebrew
+  community.general.homebrew:
+    name: "{{ ios_homebrew_packages }}"
+    state: present
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Include iOS Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

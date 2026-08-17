@@ -1,0 +1,55 @@
+---
+- name: Set System HostName, ComputerName, and LocalHostName
+  ansible.builtin.command: "scutil --set {{ item.key }} {{ inventory_hostname }}"
+  loop:
+    - { key: "ComputerName" }
+    - { key: "HostName" }
+    - { key: "LocalHostName" }
+  become: true
+  when: security_set_hostname
+  changed_when: true
+
+- name: Enable macOS Application Firewall
+  ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on"
+  become: true
+  when: security_enable_firewall
+  changed_when: true
+
+- name: Enable Firewall Stealth Mode
+  ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on"
+  become: true
+  when: security_enable_stealth_mode
+  changed_when: true
+
+- name: Disable SSH Root Login in sshd_config
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PermitRootLogin'
+    line: 'PermitRootLogin no'
+    validate: 'sshd -t -f %s'
+  become: true
+  when: security_sshd_disable_root
+
+- name: Disable Password Authentication for SSH
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+    validate: 'sshd -t -f %s'
+  become: true
+  when: security_sshd_disable_password_auth
+
+- name: Enable Automatic Software Updates Check
+  ansible.builtin.command: "softwareupdate --schedule on"
+  become: true
+  when: security_enable_autoupdate
+  changed_when: false
+
+- name: Configure Power Management & Display Sleep Timeouts
+  ansible.builtin.command: "pmset -a displaysleep {{ security_sleep_display_minutes }} disksleep {{ security_sleep_disk_minutes }}"
+  become: true
+  when: security_configure_pmset
+  changed_when: true
+
+- name: Include Security Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

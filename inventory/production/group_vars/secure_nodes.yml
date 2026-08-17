@@ -1,0 +1,6 @@
+---
+# Secure Nodes Group Overrides
+security_strict_mode: true
+security_sshd_disable_root: true
+security_sshd_disable_password_auth: true
+security_enable_stealth_mode: true

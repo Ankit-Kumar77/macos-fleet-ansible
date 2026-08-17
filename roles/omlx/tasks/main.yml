@@ -1,0 +1,75 @@
+---
+- name: Assert Architecture is Apple Silicon (arm64) for oMLX
+  ansible.builtin.assert:
+    that:
+      - ansible_facts['architecture'] == 'arm64'
+    fail_msg: "oMLX requires Apple Silicon architecture (arm64). Current architecture is {{ ansible_facts['architecture'] }}."
+    success_msg: "Apple Silicon architecture verified for oMLX."
+
+- name: Tap oMLX Homebrew Repository (if install method is brew)
+  community.general.homebrew_tap:
+    name: "{{ omlx_brew_tap }}"
+    state: present
+  when: omlx_install_method == "brew"
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install oMLX via Homebrew (if install method is brew)
+  community.general.homebrew:
+    name: "{{ omlx_brew_formula }}"
+    state: present
+  when: omlx_install_method == "brew"
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Create oMLX Virtual Environment (if install method is pip)
+  ansible.builtin.command: "{{ homebrew_bin_path }}/python3 -m venv {{ omlx_venv_path }}"
+  args:
+    creates: "{{ omlx_venv_path }}/bin/activate"
+  when: omlx_install_method == "pip"
+
+- name: Install oMLX via Pip (if install method is pip)
+  ansible.builtin.pip:
+    name: "omlx"
+    executable: "{{ omlx_venv_path }}/bin/pip"
+  when: omlx_install_method == "pip"
+
+- name: Ensure LaunchAgents Directory Exists
+  ansible.builtin.file:
+    path: "/Users/{{ devops_automation_user }}/Library/LaunchAgents"
+    state: directory
+    owner: "{{ devops_automation_user }}"
+    mode: '0755'
+
+- name: Configure LaunchAgent Plist for oMLX Background Service
+  ansible.builtin.copy:
+    dest: "/Users/{{ devops_automation_user }}/Library/LaunchAgents/com.jundot.omlx.plist"
+    owner: "{{ devops_automation_user }}"
+    mode: '0644'
+    content: |
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+          <key>Label</key>
+          <string>com.jundot.omlx</string>
+          <key>ProgramArguments</key>
+          <array>
+              <string>{{ homebrew_bin_path }}/omlx</string>
+              <string>serve</string>
+              <string>--port</string>
+              <string>{{ omlx_service_port | string }}</string>
+          </array>
+          <key>RunAtLoad</key>
+          <true/>
+          <key>KeepAlive</key>
+          <true/>
+          <key>StandardOutPath</key>
+          <string>/Users/{{ devops_automation_user }}/var/log/omlx.log</string>
+          <key>StandardErrorPath</key>
+          <string>/Users/{{ devops_automation_user }}/var/log/omlx.err</string>
+      </dict>
+  when: omlx_enable_launchagent
+
+- name: Include oMLX Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

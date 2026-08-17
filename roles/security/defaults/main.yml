@@ -1,0 +1,11 @@
+---
+# Security role defaults
+security_set_hostname: true
+security_enable_firewall: true
+security_enable_stealth_mode: true
+security_sshd_disable_root: true
+security_sshd_disable_password_auth: true
+security_enable_autoupdate: true
+security_configure_pmset: true
+security_sleep_display_minutes: 15
+security_sleep_disk_minutes: 30

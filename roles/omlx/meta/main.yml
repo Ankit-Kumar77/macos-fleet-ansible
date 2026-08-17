@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: DevOps SRE Team
+  description: oMLX Native macOS LLM Inference Server Provisioning Role
+  company: Enterprise SRE
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: MacOSX
+      versions:
+        - all
+dependencies:
+  - role: common
+  - role: mlx

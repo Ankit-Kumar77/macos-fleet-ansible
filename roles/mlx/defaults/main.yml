@@ -1,0 +1,13 @@
+---
+mlx_venv_path: "/Users/{{ devops_automation_user | default('devops') }}/.venv/mlx"
+mlx_version: "0.22.0"
+mlx_lm_version: "0.21.1"
+mlx_python_packages:
+  - name: "mlx"
+    version: "{{ mlx_version }}"
+  - name: "mlx-lm"
+    version: "{{ mlx_lm_version }}"
+  - name: "numpy"
+    version: "1.26.4"
+  - name: "huggingface_hub"
+    version: "0.24.5"

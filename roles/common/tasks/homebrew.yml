@@ -1,0 +1,24 @@
+---
+- name: Check if Homebrew is installed
+  ansible.builtin.stat:
+    path: "{{ homebrew_bin_path }}/brew"
+  register: homebrew_check
+
+- name: Install Homebrew (Non-Interactive) if missing
+  ansible.builtin.shell: |
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  when: not homebrew_check.stat.exists
+  changed_when: true
+
+- name: Ensure Homebrew environment is configured in shell profile
+  ansible.builtin.lineinfile:
+    path: "/Users/{{ ansible_user }}/.zprofile"
+    line: 'eval "$({{ homebrew_bin_path }}/brew shellenv)"'
+    create: true
+    mode: '0644'
+
+- name: Update Homebrew Package Cache
+  community.general.homebrew:
+    update_homebrew: true
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"

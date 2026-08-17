@@ -1,0 +1,23 @@
+---
+# Default variables for common role
+common_homebrew_packages:
+  - git
+  - curl
+  - wget
+  - jq
+  - htop
+  - tree
+  - cmake
+  - ninja
+  - python@3.11
+
+common_homebrew_casks: []
+
+common_base_directories:
+  - "/usr/local/bin"
+  - "/Users/{{ devops_automation_user | default('devops') }}/.config"
+  - "/Users/{{ devops_automation_user | default('devops') }}/bin"
+  - "/Users/{{ devops_automation_user | default('devops') }}/var/log"
+
+homebrew_prefix_arm64: "/opt/homebrew"
+homebrew_prefix_x86_64: "/usr/local"

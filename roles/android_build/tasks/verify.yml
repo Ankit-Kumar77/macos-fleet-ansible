@@ -1,0 +1,22 @@
+---
+- name: Verify Java Version
+  ansible.builtin.command: "{{ homebrew_prefix }}/opt/{{ android_jdk_formula }}/bin/java -version"
+  register: verify_java
+  changed_when: false
+
+- name: Verify Gradle Version
+  ansible.builtin.command: "{{ homebrew_bin_path }}/gradle --version"
+  register: verify_gradle
+  changed_when: false
+
+- name: Verify ADB Installation
+  ansible.builtin.stat:
+    path: "{{ android_sdk_root }}/platform-tools/adb"
+  register: verify_adb
+
+- name: Display Android Tooling Verification Summary
+  ansible.builtin.debug:
+    msg:
+      - "Java Details: {{ verify_java.stderr_lines[0] }}"
+      - "Gradle Details: {{ verify_gradle.stdout_lines[0] }}"
+      - "ADB Exists: {{ verify_adb.stat.exists }}"

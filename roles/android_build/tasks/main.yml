@@ -1,0 +1,61 @@
+---
+- name: Install OpenJDK via Homebrew
+  community.general.homebrew:
+    name: "{{ android_jdk_formula }}"
+    state: present
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install Android Command Line Tools & Gradle via Homebrew Cask / Formula
+  community.general.homebrew:
+    name:
+      - gradle
+    state: present
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install Android Commandline Tools Cask
+  community.general.homebrew_cask:
+    name: android-commandlinetools
+    state: present
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Ensure Android SDK Directory Structure Exists
+  ansible.builtin.file:
+    path: "{{ android_sdk_root }}"
+    state: directory
+    owner: "{{ devops_automation_user }}"
+    mode: '0755'
+
+- name: Configure ANDROID_HOME and JAVA_HOME in user environment (.zprofile)
+  ansible.builtin.blockinfile:
+    path: "/Users/{{ devops_automation_user }}/.zprofile"
+    create: true
+    owner: "{{ devops_automation_user }}"
+    mode: '0644'
+    block: |
+      export JAVA_HOME="{{ homebrew_prefix }}/opt/{{ android_jdk_formula }}"
+      export ANDROID_HOME="{{ android_sdk_root }}"
+      export ANDROID_SDK_ROOT="{{ android_sdk_root }}"
+      export PATH="$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+
+- name: Accept Android SDK Licenses
+  ansible.builtin.shell: |
+    yes | {{ homebrew_bin_path }}/sdkmanager --sdk_root={{ android_sdk_root }} --licenses
+  environment:
+    JAVA_HOME: "{{ homebrew_prefix }}/opt/{{ android_jdk_formula }}"
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Install Android SDK Packages via sdkmanager
+  ansible.builtin.shell: |
+    {{ homebrew_bin_path }}/sdkmanager --sdk_root={{ android_sdk_root }} "{{ item }}"
+  loop: "{{ android_sdk_packages }}"
+  environment:
+    JAVA_HOME: "{{ homebrew_prefix }}/opt/{{ android_jdk_formula }}"
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+  changed_when: true
+
+- name: Include Android Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

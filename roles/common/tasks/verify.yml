@@ -1,0 +1,18 @@
+---
+- name: Verify Homebrew executable
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew --version"
+  register: verify_brew
+  changed_when: false
+  failed_when: verify_brew.rc != 0
+
+- name: Verify Git installation
+  ansible.builtin.command: "{{ homebrew_bin_path }}/git --version"
+  register: verify_git
+  changed_when: false
+  failed_when: verify_git.rc != 0
+
+- name: Display Common Verification Status
+  ansible.builtin.debug:
+    msg:
+      - "Homebrew: {{ verify_brew.stdout_lines[0] }}"
+      - "Git: {{ verify_git.stdout }}"

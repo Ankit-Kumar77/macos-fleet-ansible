@@ -1,0 +1,18 @@
+---
+- name: Verify MLX Core Python Import & Metal GPU Device Detection
+  ansible.builtin.command: "{{ mlx_venv_path }}/bin/python3 -c 'import mlx.core as mx; print(mx.array([1, 2, 3]))'"
+  register: verify_mlx_import
+  changed_when: false
+  failed_when: verify_mlx_import.rc != 0
+
+- name: Verify MLX-LM Import & Version
+  ansible.builtin.command: "{{ mlx_venv_path }}/bin/python3 -c 'import mlx_lm; print(mlx_lm.__version__)'"
+  register: verify_mlx_lm
+  changed_when: false
+  failed_when: verify_mlx_lm.rc != 0
+
+- name: Display MLX Framework Verification Summary
+  ansible.builtin.debug:
+    msg:
+      - "MLX Array Test Output: {{ verify_mlx_import.stdout }}"
+      - "MLX-LM Version: {{ verify_mlx_lm.stdout }}"

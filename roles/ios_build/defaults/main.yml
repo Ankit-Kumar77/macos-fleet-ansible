@@ -1,0 +1,9 @@
+---
+ios_xcode_clt_auto_accept_license: true
+ios_homebrew_packages:
+  - cocoapods
+  - fastlane
+  - xcbeautify
+  - swiftlint
+  - swiftformat
+  - ios-deploy

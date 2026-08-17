@@ -1,0 +1,16 @@
+---
+- name: Install Common CLI Packages via Homebrew
+  community.general.homebrew:
+    name: "{{ common_homebrew_packages }}"
+    state: present
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install Base Homebrew Casks if defined
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ common_homebrew_casks }}"
+  when: common_homebrew_casks | length > 0
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"

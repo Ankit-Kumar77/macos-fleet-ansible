@@ -1,0 +1,42 @@
+---
+- name: Ensure automation user exists (macOS native user checking via dscl)
+  ansible.builtin.command: "dscl . -read /Users/{{ devops_automation_user }}"
+  register: user_check
+  failed_when: false
+  changed_when: false
+
+- name: Create automation user account on macOS (requires sudo privilege)
+  ansible.builtin.command: >
+    sysadminctl -addUser {{ devops_automation_user }}
+    -fullName "DevOps Automation Account"
+    -shell {{ devops_user_shell }}
+    -admin
+  become: true
+  when: user_check.rc != 0
+
+- name: Add automation user to developer group for macOS Xcode build access
+  ansible.builtin.command: "dseditgroup -o edit -a {{ devops_automation_user }} -t user _developer"
+  become: true
+  changed_when: false
+
+- name: Ensure SSH configuration directory exists for user
+  ansible.builtin.file:
+    path: "/Users/{{ devops_automation_user }}/.ssh"
+    state: directory
+    owner: "{{ devops_automation_user }}"
+    mode: '0700'
+
+- name: Ensure custom .zshrc environment script is configured
+  ansible.builtin.blockinfile:
+    path: "/Users/{{ devops_automation_user }}/.zshrc"
+    create: true
+    owner: "{{ devops_automation_user }}"
+    mode: '0644'
+    block: |
+      # DevOps Automation Environment Variables
+      export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+      export LANG="en_US.UTF-8"
+      export LC_ALL="en_US.UTF-8"
+
+- name: Include User Management Verification Tasks
+  ansible.builtin.include_tasks: verify.yml

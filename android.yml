@@ -1,0 +1,10 @@
+---
+# ==============================================================================
+# Android Build Nodes Provisioning Playbook
+# ==============================================================================
+- name: Provision Android Build Workloads
+  hosts: android_builders
+  gather_facts: true
+  roles:
+    - role: android_build
+      tags: ["android"]

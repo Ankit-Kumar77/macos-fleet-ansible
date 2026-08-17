@@ -1,0 +1,8 @@
+---
+omlx_venv_path: "/Users/{{ devops_automation_user | default('devops') }}/.venv/omlx"
+omlx_install_method: "brew"  # Options: "brew" or "pip"
+omlx_brew_tap: "jundot/omlx"
+omlx_brew_formula: "omlx"
+omlx_git_repo: "https://github.com/jundot/omlx.git" # PLACEHOLDER - replace with internal repo if needed
+omlx_service_port: 8000
+omlx_enable_launchagent: true

@@ -1,0 +1,10 @@
+---
+# ==============================================================================
+# Security Audit & Enforcement Playbook
+# ==============================================================================
+- name: Apply Security Hardening Policy
+  hosts: secure_nodes
+  gather_facts: true
+  roles:
+    - role: security
+      tags: ["security"]

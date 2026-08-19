@@ -18,7 +18,7 @@
     mode: '0644'
 
 - name: Update Homebrew Package Cache
-  community.general.homebrew:
-    update_homebrew: true
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew update"
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+  changed_when: false

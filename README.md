@@ -40,18 +40,22 @@ An enterprise-grade, modular, and fully idempotent Ansible automation repository
   ```bash
   pip install ansible
   ```
+* No Ansible Galaxy collections or Galaxy roles are required at runtime.
 
-### 2. Install Ansible Galaxy Collections
-```bash
-ansible-galaxy collection install -r requirements.yml
-```
-
-### 3. Mac Target Node Preparation
+### 2. Mac Target Node Preparation
 Enable SSH Remote Login on target Mac computers:
 * Open `System Settings -> General -> Sharing -> Remote Login` and toggle **ON**.
 * Copy your SSH public key to the target Mac:
   ```bash
   ssh-copy-id -i ~/.ssh/id_ed25519.pub admin@<TARGET_MAC_IP>
+  ```
+
+### 3. Configure Inventory and Variables
+* Update inventory host entries in `inventory/production/hosts.yml` (or use `inventory/development/hosts.yml` for local testing).
+* Configure values in `inventory/*/group_vars/` including secrets in `vault.yml`.
+* Validate SSH access before running playbooks:
+  ```bash
+  ssh admin@<TARGET_MAC_IP>
   ```
 
 ---
@@ -175,11 +179,15 @@ Adding new roles is clean and modular:
 
 2. **Define Tasks (`roles/monitoring/tasks/main.yml`)**:
    ```yaml
-   ---
-   - name: Install Prometheus Node Exporter via Homebrew
-     community.general.homebrew:
-       name: node_exporter
-       state: present
+   - name: Check if node_exporter is installed
+     ansible.builtin.command: "{{ homebrew_bin_path }}/brew list --formula node_exporter"
+     register: node_exporter_check
+     failed_when: false
+     changed_when: false
+
+   - name: Install node_exporter when missing
+     ansible.builtin.command: "{{ homebrew_bin_path }}/brew install node_exporter"
+     when: node_exporter_check.rc != 0
    ```
 
 3. **Include in `site.yml`**:

@@ -1,16 +1,38 @@
 ---
 - name: Install Common CLI Packages via Homebrew
-  community.general.homebrew:
-    name: "{{ common_homebrew_packages }}"
-    state: present
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew list --formula {{ item }}"
+  loop: "{{ common_homebrew_packages }}"
+  register: common_formula_checks
+  failed_when: false
+  changed_when: false
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install missing Common CLI Homebrew formulas
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew install {{ item.item }}"
+  loop: "{{ common_formula_checks.results }}"
+  when:
+    - item.rc != 0
+    - not ansible_check_mode
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
 
 - name: Install Base Homebrew Casks if defined
-  community.general.homebrew_cask:
-    name: "{{ item }}"
-    state: present
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew list --cask {{ item }}"
   loop: "{{ common_homebrew_casks }}"
+  register: common_cask_checks
+  failed_when: false
+  changed_when: false
   when: common_homebrew_casks | length > 0
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install missing Base Homebrew casks
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew install --cask {{ item.item }}"
+  loop: "{{ common_cask_checks.results | default([]) }}"
+  when:
+    - common_homebrew_casks | length > 0
+    - item.rc != 0
+    - not ansible_check_mode
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"

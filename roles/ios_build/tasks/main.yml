@@ -20,9 +20,20 @@
   changed_when: false
 
 - name: Install iOS Development Tools via Homebrew
-  community.general.homebrew:
-    name: "{{ ios_homebrew_packages }}"
-    state: present
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew list --formula {{ item }}"
+  loop: "{{ ios_homebrew_packages }}"
+  register: ios_formula_checks
+  failed_when: false
+  changed_when: false
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Install missing iOS Development Homebrew formulas
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew install {{ item.item }}"
+  loop: "{{ ios_formula_checks.results }}"
+  when:
+    - item.rc != 0
+    - not ansible_check_mode
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
 

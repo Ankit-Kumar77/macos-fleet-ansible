@@ -1,6 +1,6 @@
 ---
 - name: Check oMLX Executable Version
-  ansible.builtin.command: "{{ homebrew_bin_path }}/omlx --version"
+  ansible.builtin.command: "{{ omlx_executable_path }} --version"
   register: verify_omlx_version
   changed_when: false
   failed_when: false

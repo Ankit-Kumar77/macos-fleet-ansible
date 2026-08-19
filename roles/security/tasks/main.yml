@@ -1,25 +1,48 @@
 ---
-- name: Set System HostName, ComputerName, and LocalHostName
-  ansible.builtin.command: "scutil --set {{ item.key }} {{ inventory_hostname }}"
+- name: Read current system name values
+  ansible.builtin.command: "scutil --get {{ item }}"
   loop:
-    - { key: "ComputerName" }
-    - { key: "HostName" }
-    - { key: "LocalHostName" }
-  become: true
+    - ComputerName
+    - HostName
+    - LocalHostName
+  register: security_current_names
+  failed_when: false
+  changed_when: false
   when: security_set_hostname
-  changed_when: true
+
+- name: Set System HostName, ComputerName, and LocalHostName
+  ansible.builtin.command: "scutil --set {{ item.item }} {{ inventory_hostname }}"
+  loop: "{{ security_current_names.results }}"
+  become: true
+  when:
+    - security_set_hostname
+    - item.rc != 0 or item.stdout != inventory_hostname
+
+- name: Read current firewall global state
+  ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate"
+  register: security_firewall_state
+  changed_when: false
+  when: security_enable_firewall
 
 - name: Enable macOS Application Firewall
   ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on"
   become: true
-  when: security_enable_firewall
-  changed_when: true
+  when:
+    - security_enable_firewall
+    - security_firewall_state.stdout is not search('enabled')
+
+- name: Read current firewall stealth mode state
+  ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --getstealthmode"
+  register: security_stealth_state
+  changed_when: false
+  when: security_enable_stealth_mode
 
 - name: Enable Firewall Stealth Mode
   ansible.builtin.command: "/usr/libexec/ApplicationFirewall/socketfilterfw --setstealthmode on"
   become: true
-  when: security_enable_stealth_mode
-  changed_when: true
+  when:
+    - security_enable_stealth_mode
+    - security_stealth_state.stdout is not search('enabled')
 
 - name: Disable SSH Root Login in sshd_config
   ansible.builtin.lineinfile:
@@ -45,11 +68,19 @@
   when: security_enable_autoupdate
   changed_when: false
 
+- name: Read current Power Management sleep settings
+  ansible.builtin.command: "pmset -g"
+  register: security_pmset_current
+  changed_when: false
+  when: security_configure_pmset
+
 - name: Configure Power Management & Display Sleep Timeouts
   ansible.builtin.command: "pmset -a displaysleep {{ security_sleep_display_minutes }} disksleep {{ security_sleep_disk_minutes }}"
   become: true
-  when: security_configure_pmset
-  changed_when: true
+  when:
+    - security_configure_pmset
+    - security_pmset_current.stdout is not search('(?m)^\\s*displaysleep\\s+{{ security_sleep_display_minutes }}$')
+      or security_pmset_current.stdout is not search('(?m)^\\s*disksleep\\s+{{ security_sleep_disk_minutes }}$')
 
 - name: Include Security Verification Tasks
   ansible.builtin.include_tasks: verify.yml

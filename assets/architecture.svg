@@ -26,7 +26,7 @@
 
   <rect x="50" y="100" width="800" height="70" rx="10" fill="url(#grad-control)" filter="url(#shadow)" />
   <text x="70" y="130" fill="#ffffff" font-size="16" font-weight="700">Ansible Control Node</text>
-  <text x="70" y="152" fill="#dbeafe" font-size="13">ansible.cfg  |  requirements.yml  |  ansible-playbook CLI</text>
+  <text x="70" y="152" fill="#dbeafe" font-size="13">ansible.cfg  |  inventory/*  |  ansible-playbook CLI</text>
 
   <line x1="450" y1="170" x2="450" y2="210" stroke="#64748b" stroke-width="3" stroke-dasharray="6,6" />
   <polygon points="450,215 444,205 456,205" fill="#64748b" />

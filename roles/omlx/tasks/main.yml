@@ -7,18 +7,37 @@
     success_msg: "Apple Silicon architecture verified for oMLX."
 
 - name: Tap oMLX Homebrew Repository (if install method is brew)
-  community.general.homebrew_tap:
-    name: "{{ omlx_brew_tap }}"
-    state: present
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew tap"
+  register: omlx_tap_list
+  changed_when: false
+  when: omlx_install_method == "brew"
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Add oMLX Homebrew tap when missing
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew tap {{ omlx_brew_tap }}"
+  when:
+    - omlx_install_method == "brew"
+    - omlx_brew_tap not in omlx_tap_list.stdout_lines
+    - not ansible_check_mode
+  environment:
+    PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
+
+- name: Check if oMLX Homebrew formula is installed
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew list --formula {{ omlx_brew_formula }}"
+  register: omlx_formula_check
+  failed_when: false
+  changed_when: false
   when: omlx_install_method == "brew"
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
 
 - name: Install oMLX via Homebrew (if install method is brew)
-  community.general.homebrew:
-    name: "{{ omlx_brew_formula }}"
-    state: present
-  when: omlx_install_method == "brew"
+  ansible.builtin.command: "{{ homebrew_bin_path }}/brew install {{ omlx_brew_formula }}"
+  when:
+    - omlx_install_method == "brew"
+    - omlx_formula_check.rc != 0
+    - not ansible_check_mode
   environment:
     PATH: "{{ homebrew_bin_path }}:{{ ansible_env.PATH }}"
 
@@ -33,6 +52,10 @@
     name: "omlx"
     executable: "{{ omlx_venv_path }}/bin/pip"
   when: omlx_install_method == "pip"
+
+- name: Set oMLX executable path based on installation method
+  ansible.builtin.set_fact:
+    omlx_executable_path: "{{ (omlx_install_method == 'brew') | ternary(homebrew_bin_path ~ '/omlx', omlx_venv_path ~ '/bin/omlx') }}"
 
 - name: Ensure LaunchAgents Directory Exists
   ansible.builtin.file:
@@ -55,7 +78,7 @@
           <string>com.jundot.omlx</string>
           <key>ProgramArguments</key>
           <array>
-              <string>{{ homebrew_bin_path }}/omlx</string>
+              <string>{{ omlx_executable_path }}</string>
               <string>serve</string>
               <string>--port</string>
               <string>{{ omlx_service_port | string }}</string>
@@ -69,6 +92,7 @@
           <key>StandardErrorPath</key>
           <string>/Users/{{ mac_automation_user }}/var/log/omlx.err</string>
       </dict>
+      </plist>
   when: omlx_enable_launchagent
 
 - name: Include oMLX Verification Tasks
